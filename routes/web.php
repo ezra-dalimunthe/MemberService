@@ -29,17 +29,15 @@ Route::get('/api/docs', function () {
     ]);;
 });
 
-$router->group(["prefix" => "api/v1/genres"], function () use ($router) {
-    $router->get("/", "GenreController@index");
+$router->group(["prefix" => "api/v1/members"], function () use ($router) {
+    $router->get("/", "MemberController@index");
+    $router->get("/deleted", "MemberController@deleted");
 });
 
-$router->group(["prefix" => "api/v1/books"], function () use ($router) {
-    $router->get("/", "BookController@index");
-});
 
-$router->group(["prefix" => "api/v1/book"], function () use ($router) {
-    $router->post("/", "BookController@store");
-    $router->get("/{id}", "BookController@show");
-    $router->put("/{id}", "BookController@update");
-    $router->delete("/{id}", "BookController@destroy");
+$router->group(["prefix" => "api/v1/member"], function () use ($router) {
+    $router->post("/", "MemberController@store");
+    $router->get("/{id}", "MemberController@show");
+    $router->put("/{id}", "MemberController@update");
+    $router->delete("/{id}", "MemberController@destroy");
 });

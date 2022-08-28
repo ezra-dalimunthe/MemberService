@@ -12,10 +12,10 @@ namespace App\Models;
  *     securityScheme="apiAuth",
  * )
  * @OA\Info(
- *   title="BookService",
+ *   title="MemberService",
  *   version="1.0.0",
  *   @OA\Contact(
- *     email="bookservice-admin@unpri.edu.id"
+ *     email="memberservice-admin@unpri.edu.id"
  *   )
  * )
  * @OA\Schema (
