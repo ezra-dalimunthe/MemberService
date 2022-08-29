@@ -33,7 +33,7 @@ class MemberFactory extends Factory
             "address" => "Jl. " . $this->faker->streetName() ." No. ". $this->faker->buildingNumber() . " Medan " . $postcode ,
             "phone_number" => $this->faker->phoneNumber(),
             'email' => $this->faker->safeEmail(),
-            "status" => 1,
+            "status_id" => 1,
         ];
     }
 }

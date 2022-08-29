@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Arr;
+
 /** @var \Laravel\Lumen\Routing\Router $router */
 
 /*
@@ -16,6 +18,15 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+Route::get("/api/document",function(){
+   return view("index");
+});
+
+Route::get("/api/download-doc",function(){
+    return view("downloaddoc");
+ });
+
 
 Route::get('/api/docs', function () {
     $paths = [
@@ -34,10 +45,29 @@ $router->group(["prefix" => "api/v1/members"], function () use ($router) {
     $router->get("/deleted", "MemberController@deleted");
 });
 
-
 $router->group(["prefix" => "api/v1/member"], function () use ($router) {
     $router->post("/", "MemberController@store");
     $router->get("/{id}", "MemberController@show");
     $router->put("/{id}", "MemberController@update");
     $router->delete("/{id}", "MemberController@destroy");
+});
+Route::get('/api/test', function () {
+
+    $col1 = collect([
+        ["id" => 1, "fk_id" => 2, "name" => "name1"],
+        ["id" => 2, "fk_id" => 1, "name" => "name2"],
+        ["id" => 3, "fk_id" => 3, "name" => "name2"],
+    ]);
+    $col2 = collect([
+        ["id" => 1, "status" => "OK"],
+        ["id" => 2, "status" => "Not OK"],
+    ]);
+
+    $col3 = $col1->map(function ($item, $key) use ($col2) {
+        $selected = $col2->firstWhere("id", $item["fk_id"]);
+        $selected = $selected == null ? null : Arr::only($selected, ["status"]);
+        return Arr::add($item, "status", $selected);
+    });
+    return response()->json($col3);
+
 });

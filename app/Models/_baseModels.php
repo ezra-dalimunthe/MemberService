@@ -14,9 +14,27 @@ namespace App\Models;
  * @OA\Info(
  *   title="MemberService",
  *   version="1.0.0",
+ *   termsOfService= "https://example.com/terms/",
+ *   description="A Service as part of ReadingPoint application",
  *   @OA\Contact(
- *     email="memberservice-admin@unpri.edu.id"
- *   )
+ *     email="memberservice-support@unpri.edu.id",
+ *     name="support",
+ *     url="http:\\lab-a.unpri.edu.id"
+ *   ),
+ *   @OA\License(name="MIT")
+ *   
+ * )
+ * @OA\Server(
+ *   url="http://127.0.0.1:8202",
+ *   description="Development server",
+ * )
+ *  @OA\Server(
+ *   url="https://readingpoint.com:8202",
+ *   description="Staging server",
+ *  )
+ *  @OA\Server(
+ *   url="https://member.readingpoint.com",
+ *   description="Production server",
  * )
  * @OA\Schema (
  *   schema="data-pagination",

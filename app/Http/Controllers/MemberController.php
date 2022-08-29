@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Member;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class MemberController extends Controller
 {
@@ -48,18 +49,7 @@ class MemberController extends Controller
      */
     public function index(Request $request)
     {
-        $sortBy = $request->input("sort-by", "fullname");
-        $sortDir = $request->input("sort-dir", "asc");
-        $perPage = $request->input("per-page", 20);
-        $search = $request->input("search", null);
-        $models = Member::orderBy($sortBy, $sortDir);
-
-        if ($search) {
-            $models->where('fullname', 'like', '%' . $search . '%');
-            $models->orWhere('nik', 'like', $search . '%');
-        }
-
-        $models = $models->paginate($perPage);
+        $models = $this->query($request, 0);
 
         return response()->json($models);
     }
@@ -105,7 +95,7 @@ class MemberController extends Controller
             "address" => $request->input("address"),
             "phone_number" => $request->input("phone_number"),
             "email" => $request->input("email"),
-            "status" => $request->input("status"),
+            "status_id" => $request->input("status_id"),
         ]);
 
         return response()->json([
@@ -166,7 +156,7 @@ class MemberController extends Controller
             "address" => $request->input("address"),
             "phone_number" => $request->input("phone_number"),
             "email" => $request->input("email"),
-            "status" => $request->input("status"),
+            "status_id" => $request->input("status_id"),
         ]);
         return response()->json([
             "message" => "Member updated successfully!",
@@ -254,19 +244,38 @@ class MemberController extends Controller
      */
     public function deleted(Request $request)
     {
+
+        $models = $this->query($request, 1);
+        return response()->json($models);
+    }
+
+    // $type= 0->normal, 1 -> only deleted, 2-> all (normal+deleted)
+    private function query(Request $request, $type = 0)
+    {
         $sortBy = $request->input("sort-by", "fullname");
         $sortDir = $request->input("sort-dir", "asc");
         $perPage = $request->input("per-page", 20);
         $search = $request->input("search", null);
-        $models = Member::onlyTrashed()->orderBy($sortBy, $sortDir);
+        $models = null;
+
+        switch ($type) {
+            case 0:
+                $models = new Member;
+                break;
+            case 1:
+                $models = Member::onlyTrashed();
+                break;
+            case 2:
+                $models = Member::withTrashed();
+        }
+
+        $models->orderBy($sortBy, $sortDir);
 
         if ($search) {
             $models->where('fullname', 'like', '%' . $search . '%');
             $models->orWhere('nik', 'like', $search . '%');
         }
         $models = $models->paginate($perPage);
-
-        return response()->json($models);
+        return $models;
     }
-
 }

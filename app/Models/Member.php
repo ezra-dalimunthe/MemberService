@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *   @OA\Property(property="address", type="string"),
  *   @OA\Property(property="phone_number", type="string"),
  *   @OA\Property(property="email", type="string"),
- *   @OA\Property(property="status", type="integer"),
+ *   @OA\Property(property="status_id", type="integer"),
  * )
  */
 class Member extends Model
@@ -22,7 +22,7 @@ class Member extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'fullname', "nik", "address", "phone_number", 'email', "status",
+        'fullname', "nik", "address", "phone_number", 'email', "status_id",
     ];
 
     public static function getDefaultValidator()
@@ -33,7 +33,7 @@ class Member extends Model
             "address" => "required|string|max:200",
             "phone_number" => "required|string|max:20",
             "email" => "string|max:200",
-            "status" => "required|integer",
+            "status_id" => "required|integer",
         ];
     }
 }

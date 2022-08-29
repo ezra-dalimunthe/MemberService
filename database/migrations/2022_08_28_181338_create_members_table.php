@@ -20,7 +20,7 @@ class CreateMembersTable extends Migration
             $table->string("address", 200);
             $table->string("phone_number", 20)->nullable();
             $table->string("email", 200)->nullable();
-            $table->integer("status")->default(1);
+            $table->integer("status_id")->default(1);
             $table->softDeletes();
             $table->timestamps();
         });
