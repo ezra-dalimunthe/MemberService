@@ -29,7 +29,26 @@ class Member extends Model
     {
         return [
             "fullname" => "required|string|max:100",
-            "nik" => "required|string|max:32",
+            "nik" => "required|string|size:16|unique:members,nik",
+            "address" => "required|string|max:200",
+            "phone_number" => "required|string|max:20|unique:members,phone_number",
+            "email" => "string|max:200|unique:members,email",
+            "status_id" => "required|integer",
+        ];
+    }
+    public static function getDefaultValidatorMessage()
+    {
+        return [
+            "nik.unique" => "NIK already registered",
+            "email.unique" => "Email already registered",
+            "phone_number.unique" => "Phone Number already registered",
+        ];
+    }
+    public static function getUpdateValidator()
+    {
+        return [
+            "fullname" => "required|string|max:100",
+            "nik" => "required|string|size:16",
             "address" => "required|string|max:200",
             "phone_number" => "required|string|max:20",
             "email" => "string|max:200",

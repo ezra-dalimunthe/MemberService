@@ -88,7 +88,8 @@ class MemberController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, Member::getDefaultValidator());
+        $this->validate($request, Member::getDefaultValidator(),
+            Member::getDefaultValidatorMessage());
         $model = Member::create([
             "fullname" => $request->input("fullname"),
             "nik" => $request->input("nik"),
@@ -146,9 +147,25 @@ class MemberController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, Member::getDefaultValidator());
+
+        $this->validate($request, Member::getUpdateValidator());
 
         $model = Member::findOrFail($id);
+
+        $uniqueValidator = [];
+        if ($model->nik != $request->input("nik")) {
+            $uniqueValidator["nik"] = "unique:members,nik";
+        }
+        if ($model->phone_number != $request->input("phone_number")) {
+            $uniqueValidator["phone_number"] = "unique:members,phone_number";
+        }
+        if ($model->email != $request->input("email")) {
+            $uniqueValidator["email"] = "unique:members,email";
+        }
+
+        if (sizeOf($uniqueValidator) > 0) {
+            $this->validate($request, $uniqueValidator, Member::getDefaultValidatorMessage());
+        }
 
         $model->update([
             "fullname" => $request->input("fullname"),
@@ -256,6 +273,7 @@ class MemberController extends Controller
         $sortDir = $request->input("sort-dir", "asc");
         $perPage = $request->input("per-page", 20);
         $search = $request->input("search", null);
+
         $models = null;
 
         switch ($type) {
@@ -269,13 +287,24 @@ class MemberController extends Controller
                 $models = Member::withTrashed();
         }
 
-        $models->orderBy($sortBy, $sortDir);
+        $models = $models->orderBy($sortBy, $sortDir);
 
         if ($search) {
-            $models->where('fullname', 'like', '%' . $search . '%');
-            $models->orWhere('nik', 'like', $search . '%');
+            $params = json_decode($search, true);
+            $field = strtolower(key($params));
+            $value = current($params);
+            switch ($field) {
+                case "nik":
+                    $models->where($field, 'like', $value . '%');
+                    break;
+                default:
+                    $models->where($field, 'like', "%" . $value . '%');
+            }
+
         }
+
         $models = $models->paginate($perPage);
+
         return $models;
     }
 }
