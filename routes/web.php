@@ -51,23 +51,9 @@ $router->group(["prefix" => "api/v1/member"], function () use ($router) {
     $router->put("/{id}", "MemberController@update");
     $router->delete("/{id}", "MemberController@destroy");
 });
-Route::get('/api/test', function () {
 
-    $col1 = collect([
-        ["id" => 1, "fk_id" => 2, "name" => "name1"],
-        ["id" => 2, "fk_id" => 1, "name" => "name2"],
-        ["id" => 3, "fk_id" => 3, "name" => "name2"],
-    ]);
-    $col2 = collect([
-        ["id" => 1, "status" => "OK"],
-        ["id" => 2, "status" => "Not OK"],
-    ]);
 
-    $col3 = $col1->map(function ($item, $key) use ($col2) {
-        $selected = $col2->firstWhere("id", $item["fk_id"]);
-        $selected = $selected == null ? null : Arr::only($selected, ["status"]);
-        return Arr::add($item, "status", $selected);
-    });
-    return response()->json($col3);
-
+$router->group(["prefix" => "api/v1/entity"], function () use ($router) {
+    $router->get("member/{id}", "EntityServiceController@showMember");
+    $router->get("members", "EntityServiceController@showMembers");
 });
