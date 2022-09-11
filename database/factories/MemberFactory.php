@@ -26,11 +26,12 @@ class MemberFactory extends Factory
         $this->faker->addProvider(new \Faker\Provider\id_ID\Address($this->faker));
         $this->faker->addProvider(new \Faker\Provider\id_ID\PhoneNumber($this->faker));
         $gender = $this->faker->randomElement(['male', 'female']);
-        $postcode = $this->faker->numberBetween(20111,20512);
+        $postcode = $this->faker->numberBetween(20111, 20512);
+        $birtDate = $this->faker->dateTimeBetween('-50 years', '-17 years');
         return [
             'fullname' => $this->faker->name($gender),
-            "nik" => $this->faker->nik($gender),
-            "address" => "Jl. " . $this->faker->streetName() ." No. ". $this->faker->buildingNumber() . " Medan " . $postcode ,
+            "nik" => $this->faker->nik($gender, $birtDate),
+            "address" => "Jl. " . $this->faker->streetName() . " No. " . $this->faker->buildingNumber() . " Medan " . $postcode,
             "phone_number" => $this->faker->phoneNumber(),
             'email' => $this->faker->safeEmail(),
             "status_id" => 1,

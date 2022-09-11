@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Arr;
-
 /** @var \Laravel\Lumen\Routing\Router $router */
 
 /*
@@ -19,14 +17,13 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-Route::get("/api/document",function(){
-   return view("index");
+Route::get("/api/document", function () {
+    return view("index");
 });
 
-Route::get("/api/download-doc",function(){
+Route::get("/api/download-doc", function () {
     return view("downloaddoc");
- });
-
+});
 
 Route::get('/api/docs', function () {
     $paths = [
@@ -52,8 +49,13 @@ $router->group(["prefix" => "api/v1/member"], function () use ($router) {
     $router->delete("/{id}", "MemberController@destroy");
 });
 
-
 $router->group(["prefix" => "api/v1/entity"], function () use ($router) {
     $router->get("member/{id}", "EntityServiceController@showMember");
     $router->get("members", "EntityServiceController@showMembers");
+});
+
+$router->group(["prefix" => "api/v1/statistic"], function () use ($router) {
+    $router->get("/member-by-status", "StatisticController@memberByStatus");
+    $router->get("/member-by-gender", "StatisticController@memberByGender");
+    $router->get("/member-by-age", "StatisticController@memberByAge");
 });
