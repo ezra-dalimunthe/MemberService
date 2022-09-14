@@ -24,18 +24,7 @@ namespace App\Models;
  *   @OA\License(name="MIT")
  *   
  * )
- * @OA\Server(
- *   url="http://127.0.0.1:8202",
- *   description="Development server",
- * )
- *  @OA\Server(
- *   url="https://readingpoint.com:8202",
- *   description="Staging server",
- *  )
- *  @OA\Server(
- *   url="https://member.readingpoint.com",
- *   description="Production server",
- * )
+ 
  * @OA\Schema (
  *   schema="data-pagination",
  *   type="object",
