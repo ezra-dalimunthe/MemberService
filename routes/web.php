@@ -37,12 +37,12 @@ Route::get('/api/docs', function () {
     ]);;
 });
 
-$router->group(["prefix" => "api/v1/members"], function () use ($router) {
+$router->group(["prefix" => "api/v1/members", "middleware" => "auth"], function () use ($router) {
     $router->get("/", "MemberController@index");
     $router->get("/deleted", "MemberController@deleted");
 });
 
-$router->group(["prefix" => "api/v1/member"], function () use ($router) {
+$router->group(["prefix" => "api/v1/member", "middleware" => "auth"], function () use ($router) {
     $router->post("/", "MemberController@store");
     $router->get("/{id}", "MemberController@show");
     $router->put("/{id}", "MemberController@update");

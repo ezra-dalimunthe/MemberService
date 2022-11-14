@@ -8,10 +8,12 @@ use Illuminate\Support\Arr;
 
 class MemberController extends Controller
 {
+    use AuthorizationTrait;
     /**
      * @OA\Get(
      *   tags={"Member"},
      *   path="/api/v1/members",
+     *   security={{ "apiAuth": {} }},     
      *   summary="Member index",
      *    @OA\Parameter( name="page", in="query", required=false,
      *        description="expected page number", @OA\Schema(type="integer")
@@ -49,6 +51,7 @@ class MemberController extends Controller
      */
     public function index(Request $request)
     {
+        $this->allowRole(["member_manager","front_desk" ]);
         $models = $this->query($request, 0);
 
         return response()->json($models);
@@ -57,6 +60,7 @@ class MemberController extends Controller
      * @OA\Post(
      *   tags={"Member"},
      *   path="/api/v1/member",
+     *   security={{ "apiAuth": {} }},   
      *   summary="Member store",
      *    @OA\RequestBody(
      *      required=true,
@@ -88,6 +92,7 @@ class MemberController extends Controller
      */
     public function store(Request $request)
     {
+        $this->allowRole(["member_manager"]);
         $this->validate($request, Member::getDefaultValidator(),
             Member::getDefaultValidatorMessage());
         $model = Member::create([
@@ -109,6 +114,7 @@ class MemberController extends Controller
      * @OA\Put(
      *   tags={"Member"},
      *   path="/api/v1/member/{id}",
+     *   security={{ "apiAuth": {} }},  
      *   summary="Member update",
      *    @OA\Parameter(
      *      name="id",
@@ -147,7 +153,7 @@ class MemberController extends Controller
      */
     public function update(Request $request, $id)
     {
-
+        $this->allowRole(["member_manager"]);
         $this->validate($request, Member::getUpdateValidator());
 
         $model = Member::findOrFail($id);
@@ -185,6 +191,7 @@ class MemberController extends Controller
      * @OA\Get(
      *   tags={"Member"},
      *   path="/api/v1/member/{id}",
+     *   security={{ "apiAuth": {} }},   
      *   summary="Member show",
      *   @OA\Parameter(
      *      name="id",
@@ -209,6 +216,7 @@ class MemberController extends Controller
      */
     public function show(Request $request, $id)
     {
+        $this->allowRole(["member_manager", "front_desk"]);
         $model = Member::findOrFail($id);
         return response()->json(["member" => $model], 200);
     }
@@ -217,6 +225,7 @@ class MemberController extends Controller
      * @OA\Delete(
      *   tags={"Member"},
      *   path="/api/v1/member/{id}",
+     *   security={{ "apiAuth": {} }},   
      *   summary="Member destroy",
      *    @OA\Parameter(
      *      name="id",
@@ -235,6 +244,7 @@ class MemberController extends Controller
      */
     public function destroy(Request $request, $id)
     {
+        $this->allowRole(["member_manager"]);
         $model = Member::find($id);
         if ($model) {
             $model->delete();
@@ -246,6 +256,7 @@ class MemberController extends Controller
      * @OA\Get(
      *   tags={"Member"},
      *   path="/api/v1/members/deleted",
+     *   security={{ "apiAuth": {} }},   
      *   summary="Show Deleted members",
      *    @OA\Parameter( name="page", in="query", required=false,
      *        description="expected page number", @OA\Schema(type="integer")
@@ -261,7 +272,7 @@ class MemberController extends Controller
      */
     public function deleted(Request $request)
     {
-
+        $this->allowRole(["member_manager"]);
         $models = $this->query($request, 1);
         return response()->json($models);
     }

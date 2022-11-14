@@ -13,9 +13,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call([
-           
-        // ]);
+        \DB::table("members")->truncate();
+        $this->call([
+            MemberSeeder::class,
+        ]);
 
     }
 }

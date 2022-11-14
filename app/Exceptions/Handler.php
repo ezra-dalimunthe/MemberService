@@ -8,6 +8,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -50,13 +51,20 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
-        dd($exception);
+        
         if ($exception instanceof ModelNotFoundException) {
             return response()->json([
                 'errorMessage' => "Model not found",
                 "model" => $exception->getModel(),
                 "ids" => $exception->getIds(),
             ], 404);
+        }
+        if ($exception instanceof HttpException)
+        {
+            return response()->json([
+                'errorMessage' => $exception->getMessage(),
+
+            ], $exception->getStatusCode());
         }
         return parent::render($request, $exception);
     }
